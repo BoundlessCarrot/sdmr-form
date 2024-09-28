@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, date
 name = st.text_input("Legal name")
 birthday = st.date_input(
     "Birthday",
-    value=(datetime.now() - timedelta(days=18*365)),
+    value=None,
     format="DD/MM/YYYY",
     min_value=date(1950, 1, 1),
     max_value=(datetime.now() - timedelta(days=18*365))
@@ -55,7 +55,7 @@ writer.update_page_form_field_values(
     writer.pages[0],
     {
         "Full legal name": name,
-        "Birth date": birthday,
+        "Birth date": birthday.strftime("%m/%d/%Y"),
         "Contact Email and phone 1": email,
         "Contact Email and phone 2": phone_num,
     },
@@ -73,7 +73,7 @@ writer.update_page_form_field_values(
         "Other": other_toggle,
         "other preferred messenger": other_text,
         "newsletter": newsletter_checkbox,
-        "Date": date,
+        "Date": date.strftime("%m/%d/%Y"),
         "signature_es_:signatureblock": signature 
     },
     auto_regenerate=False
