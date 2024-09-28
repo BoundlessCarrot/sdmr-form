@@ -1,10 +1,17 @@
 from pypdf import PdfReader, PdfWriter
 import streamlit as st
-from streamlit_drawable_canvas import st_canvas 
+from streamlit_drawable_canvas import st_canvas
+from datetime import datetime, timedelta, date
 
 # get info (form fillout)
 name = st.text_input("Legal name")
-birthday = st.date_input("Birthday")
+birthday = st.date_input(
+    "Birthday",
+    value="today",
+    format="DD/MM/YYYY",
+    min_value=date(1950, 1, 1),
+    max_value=(datetime.now() - timedelta(days=18*365))
+)
 email = st.text_input("Email")
 phone_num = st.text_input("Phone number")
 
@@ -20,10 +27,10 @@ else:
 
 newsletter_checkbox = st.checkbox("Receive Sicut Dico Newsletter?")
 
-date = st.date_input("Applicable date", "today")
+date = st.date_input("Applicable date", value="today", format="DD/MM/YYYY",)
 
 signature = st_canvas(
-    fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
+    fill_color="rgba(0, 0, 0, 0.3)",  # Fixed fill color with some opacity
     stroke_width=2,
     stroke_color=0x000000,
     background_color=0xEEEEEE,
