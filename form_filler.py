@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, date
 name = st.text_input("Legal name")
 birthday = st.date_input(
     "Birthday",
-    value="today",
+    value=(datetime.now() - timedelta(days=18*365)),
     format="DD/MM/YYYY",
     min_value=date(1950, 1, 1),
     max_value=(datetime.now() - timedelta(days=18*365))
