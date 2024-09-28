@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, date
 name = st.text_input("Legal name")
 birthday = st.date_input(
     "Birthday",
-    value=None,
+    value=(datetime.now() - timedelta(days=18*365+1)),
     format="DD/MM/YYYY",
     min_value=date(1950, 1, 1),
     max_value=(datetime.now() - timedelta(days=18*365))
@@ -27,7 +27,7 @@ else:
 
 newsletter_checkbox = st.checkbox("Receive Sicut Dico Newsletter?")
 
-date = st.date_input("Applicable date", value="today", format="DD/MM/YYYY",)
+date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY",)
 
 signature = st_canvas(
     fill_color="rgba(0, 0, 0, 0.3)",  # Fixed fill color with some opacity
@@ -56,8 +56,8 @@ writer.update_page_form_field_values(
     {
         "Full legal name": name,
         "Birth date": birthday.strftime("%m/%d/%Y"),
-        "Contact Email and phone 1": email,
-        "Contact Email and phone 2": phone_num,
+        "Contact Email and phone 1": phone_num,
+        "Contact Email and phone 2": email,
     },
     auto_regenerate=False
 )
