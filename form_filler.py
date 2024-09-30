@@ -4,6 +4,7 @@ import streamlit as st
 from datetime import datetime, timedelta, date
 import os
 from pypdf.constants import AnnotationFlag
+from pypdf.generic import NameObject, NumberObject
 
 # get info (form fillout)
 name = st.text_input("Legal name")
