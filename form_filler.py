@@ -1,6 +1,6 @@
 from pypdf import PdfReader, PdfWriter
 import streamlit as st
-from streamlit_drawable_canvas import st_canvas
+# from streamlit_drawable_canvas import st_canvas
 from datetime import datetime, timedelta, date
 
 # get info (form fillout)
@@ -29,22 +29,22 @@ newsletter_checkbox = st.checkbox("Receive Sicut Dico Newsletter?")
 
 date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY",)
 
-signature = st_canvas(
-    fill_color="rgba(0, 0, 0, 0.3)",  # Fixed fill color with some opacity
-    stroke_width=2,
-    stroke_color=0x000000,
-    background_color=0xEEEEEE,
-    background_image=None,
-    update_streamlit=False,
-    height=150,
-    drawing_mode="freedraw",
-    point_display_radius=0,
-    key="canvas",
-)
+# signature = st_canvas(
+#     fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
+#     stroke_width=2,
+#     stroke_color=0x000,
+#     background_color=0xEEE,
+#     background_image=None,
+#     update_streamlit=False,
+#     height=150,
+#     drawing_mode="freedraw",
+#     point_display_radius=0,
+#     key="canvas",
+# )
 
 # update pdf with info
 reader = PdfReader("Release Agreement Form - Model _ 18+.pdf")
-writer = PdfWriter()
+writer = PdfWriter(incremental=True)
 
 fields = reader.get_fields()
 writer.append(reader)
@@ -74,7 +74,7 @@ writer.update_page_form_field_values(
         "other preferred messenger": other_text,
         "newsletter": newsletter_checkbox,
         "Date": date.strftime("%m/%d/%Y"),
-        "signature_es_:signatureblock": signature 
+        # "signature_es_:signatureblock": signature
     },
     auto_regenerate=False
 )
