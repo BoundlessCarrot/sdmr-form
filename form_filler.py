@@ -117,4 +117,4 @@ if button:
         )
 
     # Optionally, remove the file after offering download
-    # os.remove(new_filepath)
+    os.remove(new_filepath)
