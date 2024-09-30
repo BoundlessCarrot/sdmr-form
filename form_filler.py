@@ -42,45 +42,46 @@ date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY
 #     key="canvas",
 # )
 
-# update pdf with info
-reader = PdfReader("Release Agreement Form - Model _ 18+.pdf")
-writer = PdfWriter()
+button = st.button(label="All done?")
 
-fields = reader.get_fields()
-writer.append(reader)
+if button:
+    # update pdf with info
+    reader = PdfReader("Release Agreement Form - Model _ 18+.pdf")
+    writer = PdfWriter()
 
-new_filename = f"Release Agreement Form - Model {name}/{date} 18+.pdf"
+    writer.append(reader)
 
-writer.update_page_form_field_values(
-    writer.pages[0],
-    {
-        "Full legal name": name,
-        "Birth date": birthday.strftime("%m/%d/%Y"),
-        "Contact Email and phone 1": phone_num,
-        "Contact Email and phone 2": email,
-    },
-    auto_regenerate=False
-)
+    writer.update_page_form_field_values(
+        writer.pages[0],
+        {
+            "Full legal name": name,
+            "Birth date": birthday.strftime("%m/%d/%Y"),
+            "Contact Email and phone 1": phone_num,
+            "Contact Email and phone 2": email,
+        },
+        auto_regenerate=False
+    )
 
-# NOTE: do we need to write after each page?
+    # NOTE: do we need to write after each page?
 
-writer.update_page_form_field_values(
-    writer.pages[1],
-    {
-        "Telegram": telegram_checkbox,
-        "WhatsApp": whatsapp_checkbox,
-        "Signal": signal_checkbox,
-        "Other": other_toggle,
-        "other preferred messenger": other_text,
-        "newsletter": newsletter_checkbox,
-        "Date": date.strftime("%m/%d/%Y"),
-        # "signature_es_:signatureblock": signature
-    },
-    auto_regenerate=False
-)
+    writer.update_page_form_field_values(
+        writer.pages[1],
+        {
+            "Telegram": ("/Yes" if telegram_checkbox else ""),
+            "WhatsApp": ("/Yes" if whatsapp_checkbox else ""),
+            "Signal": ("/Yes" if signal_checkbox else ""),
+            "Other": ("/Yes" if other_toggle else ""),
+            "other preferred messenger": other_text,
+            "newsletter": newsletter_checkbox,
+            "Date": date.strftime("%m/%d/%Y"),
+            # "signature_es_:signatureblock": signature
+        },
+        auto_regenerate=False
+    )
 
-# NOTE: maybe add custom filename with date and persons name here
-with open(new_filename, "wb") as output_stream:
-    writer.write(output_stream)
+    new_filename = f"Release Agreement Form - Model {name}/{date} 18+.pdf"
 
-st.download_button("Download PDF", new_filename)
+    with open(new_filename, "wb") as output_stream:
+        writer.write(output_stream)
+
+    st.download_button("Download PDF", new_filename)
