@@ -27,7 +27,7 @@ else:
 
 newsletter_checkbox = st.checkbox("Receive Sicut Dico Newsletter?")
 
-date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY",)
+date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY")
 
 # signature = st_canvas(
 #     fill_color="rgba(255, 165, 0, 0.3)",  # Fixed fill color with some opacity
@@ -44,7 +44,7 @@ date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY
 
 # update pdf with info
 reader = PdfReader("Release Agreement Form - Model _ 18+.pdf")
-writer = PdfWriter(incremental=True)
+writer = PdfWriter()
 
 fields = reader.get_fields()
 writer.append(reader)
