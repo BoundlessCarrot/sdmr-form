@@ -4,7 +4,7 @@ import streamlit as st
 from datetime import datetime, timedelta, date
 import os
 from pypdf.constants import AnnotationFlag
-from pypdf.generic import NameObject, NumberObject
+from pypdf.generic import NameObject, NumberObject, IndirectObject
 
 # get info (form fillout)
 name = st.text_input("Legal name")
@@ -81,16 +81,21 @@ if button:
         auto_regenerate=False
     )
 
-    # Make fields read-only
+    # Make fields read only
     for page in writer.pages:
         if "/Annots" in page:
-            for annotation in page["/Annots"]:
+            for i, annotation in enumerate(page["/Annots"]):
+                if isinstance(annotation, IndirectObject):
+                    annotation = annotation.get_object()
                 if annotation.get("/Subtype") == "/Widget":
                     # Get current flags
                     current_flags = annotation.get("/F", 0)
                     # Add READ_ONLY and LOCKED flags
                     new_flags = current_flags | AnnotationFlag.READ_ONLY | AnnotationFlag.LOCKED
-                    annotation[NameObject("/F")] = NumberObject(new_flags) 
+                    annotation[NameObject("/F")] = NumberObject(new_flags)
+                    # Update the indirect object
+                    if isinstance(page["/Annots"][i], IndirectObject):
+                        writer._objects[page["/Annots"][i].idnum - 1] = annotation
 
     # Create a safe filename
     safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
