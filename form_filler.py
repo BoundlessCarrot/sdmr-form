@@ -67,14 +67,13 @@ if button:
     writer.update_page_form_field_values(
         writer.pages[1],
         {
-            "Telegram": ("/Yes" if telegram_checkbox else ""),
-            "WhatsApp": ("/Yes" if whatsapp_checkbox else ""),
-            "Signal": ("/Yes" if signal_checkbox else ""),
-            "Other": ("/Yes" if other_toggle else ""),
+            "Telegram": "/Yes" if telegram_checkbox else "/Off",
+            "WhatsApp": "/Yes" if whatsapp_checkbox else "/Off",
+            "Signal": "/Yes" if signal_checkbox else "/Off",
+            "Other": "/Yes" if other_toggle else "/Off",
             "other preferred messenger": other_text,
-            "newsletter": newsletter_checkbox,
+            "newsletter": "/Yes" if newsletter_checkbox else "/Off",
             "Date": date.strftime("%m/%d/%Y"),
-            # "signature_es_:signatureblock": signature
         },
         auto_regenerate=False
     )
