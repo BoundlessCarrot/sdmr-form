@@ -2,6 +2,7 @@ from pypdf import PdfReader, PdfWriter
 import streamlit as st
 # from streamlit_drawable_canvas import st_canvas
 from datetime import datetime, timedelta, date
+import os
 
 # get info (form fillout)
 name = st.text_input("Legal name")
@@ -78,9 +79,24 @@ if button:
         auto_regenerate=False
     )
 
-    new_filename = f"Release Agreement Form - Model {name}/{date} 18+.pdf"
+    # Create a safe filename
+    safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
+    new_filename = f"Release_Agreement_Form_-_Model_{safe_name}_{date.strftime('%Y-%m-%d')}_18+.pdf"
 
-    with open(new_filename, "wb") as output_stream:
+    # Ensure the file is created in the current working directory
+    new_filepath = os.path.join(os.getcwd(), new_filename)
+
+    with open(new_filepath, "wb") as output_stream:
         writer.write(output_stream)
 
-    st.download_button("Download PDF", new_filename)
+    # Use the file path for the download button
+    with open(new_filepath, "rb") as file:
+        st.download_button(
+            label="Download PDF",
+            data=file,
+            file_name=new_filename,
+            mime="application/pdf"
+        )
+
+    # Optionally, remove the file after offering download
+    # os.remove(new_filepath)
