@@ -1,8 +1,11 @@
+# TODO: move date field up slightly, change whatsapp to checkbox instead of radio button in adobe acrobat
+
 from PyPDFForm import PdfWrapper
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from datetime import datetime, timedelta, date
 import os
+import io
 from PIL import Image
 import numpy as np
 
@@ -68,14 +71,12 @@ if button:
         # Handle signature
         if canvas is not None and canvas.image_data is not None:
             if np.any(canvas.image_data):
-                # Create temporary file for signature
-                temp_sig_path = "temp_signature.png"
                 signature_image = Image.fromarray((canvas.image_data * 255).astype(np.uint8))
-                signature_image.save(temp_sig_path)
+                signature_buffer = io.BytesIO()
+                signature_image.save(signature_buffer, format='PNG')
+                signature_bytes = signature_buffer.getvalue()
+                form_data["signature_es_:signatureblock"] = signature_bytes
                 
-                # Add signature to form data using file path
-                form_data["signature_es_:signatureblock"] = signature_image
-
         # Fill the form
         filled_pdf = pdf.fill(form_data)
 
@@ -96,8 +97,6 @@ if button:
             )
 
         # Clean up temporary files
-        if os.path.exists(temp_sig_path):
-            os.remove(temp_sig_path)
         os.remove(new_filename)
         
     except Exception as e:
