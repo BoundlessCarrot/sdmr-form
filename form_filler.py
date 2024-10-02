@@ -35,17 +35,17 @@ newsletter_checkbox = st.checkbox("Receive Sicut Dico Newsletter?")
 
 date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY")
 
-# Create two columns for the canvas
-col1, col2 = st.columns([3, 1])
-
-with col1:
-    canvas = st_canvas(
-        stroke_width=2,
-        update_streamlit=True,
-        height=150,
-        drawing_mode="freedraw",
-        key="canvas",
-    )
+# # Create two columns for the canvas
+# col1, col2 = st.columns([3, 1])
+#
+# with col1:
+#     canvas = st_canvas(
+#         stroke_width=2,
+#         update_streamlit=True,
+#         height=150,
+#         drawing_mode="freedraw",
+#         key="canvas",
+#     )
 
 button = st.button(label="All done?")
 
@@ -67,14 +67,14 @@ if button:
     # Create PDF wrapper and fill initial data
     pdf = PdfWrapper("Release Agreement Form - Model _ 18+.pdf")
     
-    # Handle signature
-    if canvas is not None and canvas.image_data is not None:
-        if np.any(canvas.image_data):
-            signature_image = Image.fromarray((canvas.image_data * 255).astype(np.uint8))
-            signature_buffer = io.BytesIO()
-            signature_image.save(signature_buffer, format='PNG')
-            signature_bytes = signature_buffer.getvalue()
-            form_data["signature_es_:signatureblock"] = signature_bytes
+    # # Handle signature
+    # if canvas is not None and canvas.image_data is not None:
+    #     if np.any(canvas.image_data):
+    #         signature_image = Image.fromarray((canvas.image_data * 255).astype(np.uint8))
+    #         signature_buffer = io.BytesIO()
+    #         signature_image.save(signature_buffer, format='PNG')
+    #         signature_bytes = signature_buffer.getvalue()
+    #         form_data["signature_es_:signatureblock"] = signature_bytes
             
     # Fill the form
     filled_pdf = pdf.fill(form_data)
