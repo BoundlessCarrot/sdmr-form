@@ -35,10 +35,10 @@ date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY
 
 canvas = st_canvas(
     stroke_width=2,
+    background_color="white",
     update_streamlit=False,
     height=150,
     drawing_mode="freedraw",
-    key="canvas",
 )
 
 button = st.button(label="All done?")
