@@ -3,6 +3,9 @@ import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from datetime import datetime, timedelta, date
 import os
+import io
+from PIL import Image
+import numpy as np
 
 # get info (form fillout)
 name = st.text_input("Legal name")
@@ -43,29 +46,38 @@ button = st.button(label="All done?")
 if button:
     # update pdf with info
 
-    signature = ""
-
+    signature_bytes = None
     if canvas is not None and canvas.image_data is not None:
-        signature = canvas.image_data
-        
+        # Check if there's any drawing
+        if np.any(canvas.image_data):
+            # Convert numpy array to PIL Image
+            signature_image = Image.fromarray((canvas.image_data * 255).astype(np.uint8))
+            
+            # Convert PIL Image to bytes
+            signature_buffer = io.BytesIO()
+            signature_image.save(signature_buffer, format='PNG')
+            signature_bytes = signature_buffer.getvalue()        
     
-    filler = PdfWrapper("Release Agreement Form - Model _ 18+.pdf").fill(
-        {
-            "Full legal name": name,
-            "Birth date": birthday.strftime("%m/%d/%Y"),
-            "Contact Email and phone 1": phone_num,
-            "Contact Email and phone 2": email,
-            "Telegram": telegram_checkbox,
-            "WhatsApp": whatsapp_checkbox,
-            "Signal": signal_checkbox,
-            "Other": other_toggle,
-            "other preferred messenger": other_text,
-            "newsletter": newsletter_checkbox,
-            "Date": date.strftime("%m/%d/%Y"),
-            "signature_es_:signatureblock": signature
-        }
-    )
+    form_data = {
+        "Full legal name": name,
+        "Birth date": birthday.strftime("%m/%d/%Y"),
+        "Contact Email and phone 1": phone_num,
+        "Contact Email and phone 2": email,
+        "Telegram": telegram_checkbox,
+        "WhatsApp": whatsapp_checkbox,
+        "Signal": signal_checkbox,
+        "Other": other_toggle,
+        "other preferred messenger": other_text,
+        "newsletter": newsletter_checkbox,
+        "Date": date.strftime("%m/%d/%Y"),
+    }
+    
+    # Only add signature if it exists
+    if signature_bytes:
+        form_data["signature_es_:signatureblock"] = signature_bytes
 
+    filler = PdfWrapper("Release Agreement Form - Model _ 18+.pdf").fill(form_data)
+    
     # Create a safe filename
     safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
     new_filename = f"Release_Agreement_Form_-_Model_{safe_name}_{date.strftime('%Y-%m-%d')}_18+.pdf"
