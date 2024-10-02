@@ -25,7 +25,7 @@ signal_checkbox = st.checkbox("Signal")
 other_toggle = st.toggle("Other messenger")
 
 if other_toggle:
-    other_text = st.text_input("Mesenger")
+    other_text = st.text_input("Messenger")
 else:
     other_text = ""
 
@@ -35,18 +35,16 @@ date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY
 
 canvas = st_canvas(
     stroke_width=2,
-    background_color="white",
     update_streamlit=False,
     height=150,
     drawing_mode="freedraw",
-    key="canvas"
+    key="canvas",
 )
 
 button = st.button(label="All done?")
 
 if button:
-    # update pdf with info
-
+    # Handle signature data
     signature_bytes = None
     if canvas is not None and canvas.image_data is not None:
         # Check if there's any drawing
@@ -57,46 +55,50 @@ if button:
             # Convert PIL Image to bytes
             signature_buffer = io.BytesIO()
             signature_image.save(signature_buffer, format='PNG')
-            signature_bytes = signature_buffer.getvalue()        
+            signature_bytes = signature_buffer.getvalue()
     
-    form_data = {
-        "Full legal name": name,
-        "Birth date": birthday.strftime("%m/%d/%Y"),
-        "Contact Email and phone 1": phone_num,
-        "Contact Email and phone 2": email,
-        "Telegram": telegram_checkbox,
-        "WhatsApp": whatsapp_checkbox,
-        "Signal": signal_checkbox,
-        "Other": other_toggle,
-        "other preferred messenger": other_text,
-        "newsletter": newsletter_checkbox,
-        "Date": date.strftime("%m/%d/%Y"),
-    }
-    
-    # Only add signature if it exists
-    if signature_bytes:
-        form_data["signature_es_:signatureblock"] = signature_bytes
+    try:
+        form_data = {
+            "Full legal name": name,
+            "Birth date": birthday.strftime("%m/%d/%Y"),
+            "Contact Email and phone 1": phone_num,
+            "Contact Email and phone 2": email,
+            "Telegram": telegram_checkbox,
+            "WhatsApp": whatsapp_checkbox,
+            "Signal": signal_checkbox,
+            "Other": other_toggle,
+            "other preferred messenger": other_text,
+            "newsletter": newsletter_checkbox,
+            "Date": date.strftime("%m/%d/%Y"),
+        }
+        
+        # Only add signature if it exists
+        if signature_bytes:
+            form_data["signature_es_:signatureblock"] = signature_bytes
 
-    filler = PdfWrapper("Release Agreement Form - Model _ 18+.pdf").fill(form_data)
-    
-    # Create a safe filename
-    safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
-    new_filename = f"Release_Agreement_Form_-_Model_{safe_name}_{date.strftime('%Y-%m-%d')}_18+.pdf"
+        filler = PdfWrapper("Release Agreement Form - Model _ 18+.pdf").fill(form_data)
 
-    # Ensure the file is created in the current working directory
-    new_filepath = os.path.join(os.getcwd(), new_filename)
+        # Create a safe filename
+        safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
+        new_filename = f"Release_Agreement_Form_-_Model_{safe_name}_{date.strftime('%Y-%m-%d')}_18+.pdf"
 
-    with open(new_filepath, "wb+") as output_stream:
-        output_stream.write(filler.read())
+        # Ensure the file is created in the current working directory
+        new_filepath = os.path.join(os.getcwd(), new_filename)
 
-    # Use the file path for the download button
-    with open(new_filepath, "rb") as file:
-        st.download_button(
-            label="Download PDF",
-            data=file,
-            file_name=new_filename,
-            mime="application/pdf"
-        )
+        with open(new_filepath, "wb+") as output_stream:
+            output_stream.write(filler.read())
 
-    # Optionally, remove the file after offering download
-    os.remove(new_filepath)
+        # Use the file path for the download button
+        with open(new_filepath, "rb") as file:
+            st.download_button(
+                label="Download PDF",
+                data=file,
+                file_name=new_filename,
+                mime="application/pdf"
+            )
+
+        # Optionally, remove the file after offering download
+        os.remove(new_filepath)
+        
+    except Exception as e:
+        st.error(f"An error occurred while processing the form: {str(e)}")
