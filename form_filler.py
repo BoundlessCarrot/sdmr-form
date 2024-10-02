@@ -36,6 +36,7 @@ date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY
 canvas = st_canvas(
     stroke_width=2,
     update_streamlit=False,
+    background_color="white",
     height=150,
     drawing_mode="freedraw",
     key="canvas",
