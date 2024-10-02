@@ -74,7 +74,7 @@ if button:
                 signature_image.save(temp_sig_path)
                 
                 # Add signature to form data using file path
-                form_data["signature_es_:signatureblock"] = temp_sig_path
+                form_data["signature_es_:signatureblock"] = signature_image
 
         # Fill the form
         filled_pdf = pdf.fill(form_data)
