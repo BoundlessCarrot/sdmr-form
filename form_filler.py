@@ -50,54 +50,52 @@ with col1:
 button = st.button(label="All done?")
 
 if button:
-    try:
-        form_data = {
-            "Full legal name": name,
-            "Birth date": birthday.strftime("%m/%d/%Y"),
-            "Contact Email and phone 1": phone_num,
-            "Contact Email and phone 2": email,
-            "Telegram": "/Yes" if telegram_checkbox else "/Off",
-            "WhatsApp": "/Yes" if whatsapp_checkbox else "/Off",
-            "Signal": "/Yes" if signal_checkbox else "/Off",
-            "Other": "/Yes" if other_toggle else "/Off",
-            "other preferred messenger": other_text,
-            "newsletter": "/Yes" if newsletter_checkbox else "/Off",
-            "Date": date.strftime("%m/%d/%Y"),
-        }
-        
-        # Create PDF wrapper and fill initial data
-        pdf = PdfWrapper("Release Agreement Form - Model _ 18+.pdf")
-        
-        # Handle signature
-        if canvas is not None and canvas.image_data is not None:
-            if np.any(canvas.image_data):
-                signature_image = Image.fromarray((canvas.image_data * 255).astype(np.uint8))
-                signature_buffer = io.BytesIO()
-                signature_image.save(signature_buffer, format='PNG')
-                signature_bytes = signature_buffer.getvalue()
-                form_data["signature_es_:signatureblock"] = signature_bytes
-                
-        # Fill the form
-        filled_pdf = pdf.fill(form_data)
+    form_data = {
+        "Full legal name": name,
+        "Birth date": birthday.strftime("%m/%d/%Y"),
+        "Contact Email and phone 1": phone_num,
+        "Contact Email and phone 2": email,
+        "Telegram": "/Yes" if telegram_checkbox else "/Off",
+        "WhatsApp": "/Yes" if whatsapp_checkbox else "/Off",
+        "Signal": "/Yes" if signal_checkbox else "/Off",
+        "Other": "/Yes" if other_toggle else "/Off",
+        "other preferred messenger": other_text,
+        "newsletter": "/Yes" if newsletter_checkbox else "/Off",
+        "Date": date.strftime("%m/%d/%Y"),
+    }
+    
+    # Create PDF wrapper and fill initial data
+    pdf = PdfWrapper("Release Agreement Form - Model _ 18+.pdf")
+    
+    # Handle signature
+    if canvas is not None and canvas.image_data is not None:
+        if np.any(canvas.image_data):
+            signature_image = Image.fromarray((canvas.image_data * 255).astype(np.uint8))
+            signature_buffer = io.BytesIO()
+            signature_image.save(signature_buffer, format='PNG')
+            signature_bytes = signature_buffer.getvalue()
+            form_data["signature_es_:signatureblock"] = signature_bytes
+            
+    # Fill the form
+    filled_pdf = pdf.fill(form_data)
 
-        # Create a safe filename
-        safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
-        new_filename = f"Release_Agreement_Form_-_Model_{safe_name}_{date.strftime('%Y-%m-%d')}_18+.pdf"
+    # Create a safe filename
+    safe_name = "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
+    new_filename = f"Release_Agreement_Form_-_Model_{safe_name}_{date.strftime('%Y-%m-%d')}_18+.pdf"
 
-        # Save and offer download
-        with open(new_filename, "wb") as output_stream:
-            output_stream.write(filled_pdf.read())
+    # Save and offer download
+    with open(new_filename, "wb") as output_stream:
+        output_stream.write(filled_pdf.read())
 
-        with open(new_filename, "rb") as file:
-            st.download_button(
-                label="Download PDF",
-                data=file,
-                file_name=new_filename,
-                mime="application/pdf"
-            )
+    with open(new_filename, "rb") as file:
+        st.download_button(
+            label="Download PDF",
+            data=file,
+            file_name=new_filename,
+            mime="application/pdf"
+        )
 
-        # Clean up temporary files
-        os.remove(new_filename)
-        
-    except Exception as e:
-        st.error(f"An error occurred while processing the form: {str(e)}")
+    # Clean up temporary files
+    os.remove(new_filename)
+    
+
