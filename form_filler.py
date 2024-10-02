@@ -39,6 +39,7 @@ canvas = st_canvas(
     update_streamlit=False,
     height=150,
     drawing_mode="freedraw",
+    key="canvas"
 )
 
 button = st.button(label="All done?")
