@@ -50,20 +50,6 @@ date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY
 button = st.button(label="All done?")
 
 if button:
-    # form_data = {
-    #     "Full legal name": name,
-    #     "Birth date": birthday.strftime("%m/%d/%Y"),
-    #     "Contact Email and phone 1": phone_num,
-    #     "Contact Email and phone 2": email,
-    #     "Telegram": "Yes" if telegram_checkbox else "Off",
-    #     "WhatsApp": "Yes" if whatsapp_checkbox else "Off",
-    #     "Signal": "Yes" if signal_checkbox else "Off",
-    #     "Other": "Yes" if other_toggle else "Off",
-    #     "other preferred messenger": other_text,
-    #     "newsletter": "Yes" if newsletter_checkbox else "Off",
-    #     "Date": date.strftime("%m/%d/%Y"),
-    # }
-
     form_data = {
         "Full legal name": name,
         "Birth date": birthday.strftime("%m/%d/%Y"),
