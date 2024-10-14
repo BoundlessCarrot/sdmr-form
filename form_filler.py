@@ -13,7 +13,8 @@ import numpy as np
 name = st.text_input("Legal name")
 birthday = st.date_input(
     "Birthday",
-    value=(datetime.now() - timedelta(days=18*365+1)),
+    #value=(datetime.now() - timedelta(days=18*365+1)),
+    value=None,
     format="DD/MM/YYYY",
     min_value=date(1950, 1, 1),
     max_value=(datetime.now() - timedelta(days=18*365))
@@ -52,7 +53,7 @@ button = st.button(label="All done?")
 if button:
     form_data = {
         "Full legal name": name,
-        "Birth date": birthday.strftime("%m/%d/%Y"),
+        "Birth date": (birthday.strftime("%m/%d/%Y") if birthday else None),
         "Contact Email and phone 1": phone_num,
         "Contact Email and phone 2": email,
         "Telegram": telegram_checkbox,
