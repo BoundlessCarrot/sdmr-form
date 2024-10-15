@@ -47,7 +47,7 @@ date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY
 #         key="canvas",
 #     )
 
-button = st.button(label="All done?")
+button = st.button(label="All done?", on_click=st.empty())
 
 if button:
     form_data = {
@@ -93,7 +93,8 @@ if button:
             label="Download PDF",
             data=file,
             file_name=new_filename,
-            mime="application/pdf"
+            mime="application/pdf",
+            use_container_width=True
         )
 
     # Clean up temporary files
