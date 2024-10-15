@@ -47,7 +47,7 @@ date = st.date_input("Applicable date", value=datetime.now(), format="DD/MM/YYYY
 #         key="canvas",
 #     )
 
-button = st.button(label="All done?", on_click=st.empty())
+button = st.button(label="All done?")
 
 if button:
     form_data = {
