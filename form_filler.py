@@ -13,11 +13,10 @@ import numpy as np
 name = st.text_input("Legal name")
 birthday = st.date_input(
     "Birthday",
-    #value=(datetime.now() - timedelta(days=18*365+1)),
     value=None,
     format="DD/MM/YYYY",
     min_value=date(1950, 1, 1),
-    max_value=(datetime.now() - timedelta(days=18*365))
+    # max_value=(datetime.now() - timedelta(days=18*365))
 )
 email = st.text_input("Email")
 phone_num = st.text_input("Phone number")
